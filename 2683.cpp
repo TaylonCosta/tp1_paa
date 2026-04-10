@@ -1,12 +1,13 @@
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
 
 struct Node{
     int index;
-    Node *prox;
+    Node *prox = nullptr;
 };
 
 struct Edge{
@@ -62,27 +63,27 @@ bool compare( Edge a, Edge b){
 int main(){
 
         int m=0, n=0, x=0, y=0, z=0, menor_dist=0, maior_dist=0;
-        cin >> n;
+        cin >> m;
+        n = m+1;
 
-        Edge edge[n];
-        Node* node = new Node[n];
+        vector<Edge> edge(m);
+        vector<Node> node(n);
 
         for(int i=0; i<n; ++i){
             node[i].index = i;
             make_set(node[i]);
         }
 
-        for(int i=0; i<n; ++i){
+        for(int i=0; i<m; ++i){
             cin >> x >> y >> z;
-            x--;y--;
             edge[i].saida = &node[x];
-            edge[i].dest = &node[y];
-            edge[i].peso = z;
+            edge[i].dest  = &node[y];
+            edge[i].peso  = z;
         }
 
-        sort(edge, edge+n, compare);
+        sort(edge.begin(), edge.end(), compare);
 
-        for(int i=0; i<n; ++i){
+        for(int i=0; i<m; ++i){
             if(!find_set(edge[i].saida, edge[i].dest)){
                 make_union(edge[i].saida, edge[i].dest);
                 menor_dist+=edge[i].peso;
@@ -90,11 +91,10 @@ int main(){
         }
 
         for(int i=0; i<n; ++i){
-            node[i].index = i;
             make_set(node[i]);
         }
 
-        for(int i=n-1; i>0; --i){
+        for(int i=m-1; i>0; --i){
             if(!find_set(edge[i].saida, edge[i].dest)){
                 make_union(edge[i].saida, edge[i].dest);
                 maior_dist+=edge[i].peso;
